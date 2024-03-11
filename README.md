@@ -13,6 +13,12 @@ Escolha modelos 3D a partir de um menu e visualize-os no centro da cena.
 ### :arrow_right: Edição de Propriedades dos Modelos 
 Edite transformações (translação, escala, rotação) e propriedades de textura dos modelos.
 
+### :arrow_right: Múltiplas Luzes
+Experimente a iluminação da cena adicionando múltiplas fontes de luz, permitindo configurar posição, cor e intensidade de cada luz.
+
+### :arrow_right: Toon Shading
+Adicione um efeito de toon shading para estilizar a renderização dos modelos, proporcionando uma aparência de desenho animado.
+
 ###  :arrow_right: Salvamento e Carregamento de Cenas
 Salve sua cena em um arquivo JSON e carregue cenas previamente criadas
 

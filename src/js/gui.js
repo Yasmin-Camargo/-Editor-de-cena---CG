@@ -62,10 +62,10 @@ const newLight = (index) => {
   }
 
   const lightFolder = gui.addFolder(`Light Properties ${index}`);
-  lightFolder.add(configLight, "lightPositionX", -20, 20, 0.1).name("Light Direction X");
-  lightFolder.add(configLight, "lightPositionY", -20, 20, 0.1).name("Light Direction Y");
-  lightFolder.add(configLight, "lightPositionZ", -20, 20, 0.1).name("Light Direction Z");
-  lightFolder.addColor(configLight, "colorLight").name('Ambient Light');
+  lightFolder.add(configLight, "lightPositionX", -20, 20, 0.1).name("Light Position X");
+  lightFolder.add(configLight, "lightPositionY", -20, 20, 0.1).name("Light Position Y");
+  lightFolder.add(configLight, "lightPositionZ", -20, 20, 0.1).name("Light Position Z");
+  lightFolder.addColor(configLight, "colorLight").name('Light Color');
   lightFolder.add(configLight, "ligthIntensity", 0.1, 1.5, 0.1).name("Ligth Intensity");
 
   return configLight;
