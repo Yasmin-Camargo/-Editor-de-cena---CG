@@ -1,10 +1,13 @@
 let parts = [];
 let textures;
+let lights = []
+let numLights = 1;
+let toonShading = 0;
 
 async function main() {
-  const { gl, meshProgramInfo } = initializeWorld();
+  const { gl, meshProgramInfo } = initializeWorld(numLights);
 
-  const server = 'http://127.0.0.1:8080/';
+  const server = 'http://127.0.0.1:60537/';
   const file = 'KayKit_Furniture_Bits_1.0_FREE/Assets/obj/';
 
   let objHrefs = [
@@ -157,7 +160,8 @@ async function main() {
 
   newGui(objHrefs.length);
 
-  
+  lights.push(newLight(numLights));
+
   function render() {
     twgl.resizeCanvasToDisplaySize(gl.canvas);
     
@@ -182,9 +186,23 @@ async function main() {
     const view = m4.inverse(camera);
 
     var viewProjectionMatrix = m4.multiply(projection, view);
+    
+    let positions = [];
+    let colors = [];
+    let intensitys = [];
+    for (let i = 0; i < numLights; i++){
+      positions = positions.concat([lights[i].lightPositionX, lights[i].lightPositionY, lights[i].lightPositionZ]);
+      colors = colors.concat([lights[i].colorLight[0]/255, lights[i].colorLight[1]/255, lights[i].colorLight[2]/255]);
+      intensitys.push(lights[i].ligthIntensity);
+    }
 
     const sharedUniforms = {
-      u_lightDirection: m4.normalize([-1, 3, 5]),
+      u_ambientLight: [0.1, 0.1, 0.1],
+      u_lightPosition: positions,
+      u_colorLight: colors, 
+      u_active_light: numLights,
+      u_active_toonShading: toonShading,
+      u_ligthIntensity: intensitys,
       u_view: view,
       u_projection: projection,
       u_viewWorldPosition: cameraPosition,
@@ -230,16 +248,11 @@ async function main() {
         material.diffuse = aux;
 
         aux = [];
-        aux.push(config.ambient[0]/255);
-        aux.push(config.ambient[1]/255);
-        aux.push(config.ambient[2]/255);
-        material.ambient = aux;
-
-        aux = [];
         aux.push(config.specular[0]/255);
         aux.push(config.specular[1]/255);
         aux.push(config.specular[2]/255);
         material.specular = aux;
+
 
         material.shininess = config.shininess;
         material.opacity = config.opacity;
@@ -283,24 +296,33 @@ async function main() {
   }
 
   document.getElementById('save').addEventListener('click', function() {
-    const savedData = [];
+    const savedData = {
+      parts: [],
+      lights: lights.map(light => ({
+        lightPositionX: light.lightPositionX,
+        lightPositionY: light.lightPositionY,
+        lightPositionZ: light.lightPositionZ,
+        colorLight: light.colorLight,
+      }))
+    };
+  
     for (let i = objs.length; i < parts.length; i++) {
-      savedData.push({
+      savedData.parts.push({
         config: parts[i].config,
         index: parts[i].index,
       });
     }
-
-    const json = JSON.stringify({ parts: savedData });
-    
+  
+    const json = JSON.stringify(savedData);
+  
     const link = document.createElement('a');
     link.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
     link.download = 'cenas/myModel.json';
-    
+  
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  }); 
+  });
 
   document.getElementById('clear').addEventListener('click', function(){
     const save = [];
@@ -312,6 +334,25 @@ async function main() {
     gui.destroy();
     gui = null;
     newGui(objHrefs.length);
+    lights = [];
+    numLights = 1;
+    lights.push(newLight(numLights));
+  });
+
+  document.getElementById('ligth').addEventListener('click', function(){
+    if (numLights + 1 <= 5){
+      numLights += 1;
+      lights.push(newLight(numLights));
+    }
+  });
+
+  document.getElementById('toonShading').addEventListener('click', function(){
+    if (toonShading == 0){
+      toonShading = 1;
+    }
+    else {
+      toonShading = 0;
+    }
   });
 
 }
@@ -329,6 +370,19 @@ async function loadJson() {
   const jsonData = await response.json();
 
   const loadedParts = jsonData.parts;
+
+  let i = lights.length + 1;
+  jsonData.lights.forEach(lightData => {
+    let configLight = newLight(i);
+    configLight.lightPositionX = lightData.lightPositionX;
+    configLight.lightPositionY = lightData.lightPositionY;
+    configLight.lightPositionZ = lightData.lightPositionZ;
+    configLight.colorLight = lightData.colorLight;
+    
+    lights.push(configLight);
+    i++; 
+    numLights += 1;
+  });
 
   for (const loadedPart of loadedParts) {
     const { config, index } = loadedPart;
@@ -368,7 +422,5 @@ async function loadJson() {
     });
   }
 }
-
-
 
 main();

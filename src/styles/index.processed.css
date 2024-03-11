@@ -80,6 +80,30 @@ button:hover, #save:hover, .loadFile label:hover, #clear:hover{
   margin-bottom: 10px;
   font-weight: bolder;
 }
+#ligth{
+  width: 110px;
+  top: 10px;
+  left: 360px; 
+  border: 0;
+  padding: 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  position: fixed;
+  margin-bottom: 10px;
+  font-weight: bolder;
+}
+#toonShading{
+  width: 110px;
+  top: 10px;
+  left: 480px; 
+  border: 0;
+  padding: 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  position: fixed;
+  margin-bottom: 10px;
+  font-weight: bolder;
+}
 .loadFile input[type="file"] {
   visibility: hidden;
 }

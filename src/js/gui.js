@@ -43,11 +43,30 @@ const loadGUI = (index) => {
   scale.add(configGen, "scaleZ", -1, 5, 0.1).name("Scale Z");
   scale.add(configGen, "scaleUni", -1, 5, 0.1).name("Uniform Scale");
   texture.addColor(configGen, "diffuse").name("Diffuse Color");
-  texture.addColor(configGen, "ambient").name("Ambient Color");
   texture.addColor(configGen, "specular").name("Specular Color");
   texture.add(configGen, "shininess", 0, 1000).name("Shininess");
   texture.add(configGen, "opacity", 0, 1).name("Opacity");
   texture.add(configGen, "diffuseMap", Object.keys(textures)).name("Diffuse Map");
 
   return configGen;
+};
+
+
+const newLight = (index) => {
+  const configLight = {
+    lightPositionX: 0,
+    lightPositionY: 1,
+    lightPositionZ: 2,
+    colorLight: [255, 255, 255],
+    ligthIntensity: 1.0,
+  }
+
+  const lightFolder = gui.addFolder(`Light Properties ${index}`);
+  lightFolder.add(configLight, "lightPositionX", -20, 20, 0.1).name("Light Direction X");
+  lightFolder.add(configLight, "lightPositionY", -20, 20, 0.1).name("Light Direction Y");
+  lightFolder.add(configLight, "lightPositionZ", -20, 20, 0.1).name("Light Direction Z");
+  lightFolder.addColor(configLight, "colorLight").name('Ambient Light');
+  lightFolder.add(configLight, "ligthIntensity", 0.1, 1.5, 0.1).name("Ligth Intensity");
+
+  return configLight;
 };
